@@ -432,7 +432,7 @@ export default function LiveSpeedDashboard() {
           BC Speedometer
         </h1>
         <p class="speedometer-description">
-          座標は 1/1000 に変換して一の位で四捨五入した値を 1hex として扱い、速度をリアルタイム表示します。
+          BitCraft内のプレイヤーの移動速度をリアルタイムで表示します。
         </p>
       </header>
 
