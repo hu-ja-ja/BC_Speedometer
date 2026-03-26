@@ -64,8 +64,8 @@ function convertSpeed(speedHexPerSec: number, unit: SpeedUnit): number {
 }
 
 function formatSpeed(speedHexPerSec: number, unit: SpeedUnit): string {
-  const rounded = Math.round(convertSpeed(speedHexPerSec, unit));
-  const value = rounded.toString().padStart(2, "0");
+  const rounded = Math.round(convertSpeed(speedHexPerSec, unit) * 10) / 10;
+  const value = rounded.toFixed(1);
   return `${value} ${unitLabel[unit]}`;
 }
 
