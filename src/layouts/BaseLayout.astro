@@ -15,6 +15,9 @@ const {
   title = "Solid + Astro + Kobalte Template",
   description = "A visual-first starter with reusable UI language."
 } = Astro.props as Props;
+
+const faviconIcoHref = `${import.meta.env.BASE_URL}favicon.ico`;
+const faviconSvgHref = `${import.meta.env.BASE_URL}favicon.svg`;
 ---
 
 <!doctype html>
@@ -23,6 +26,8 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={faviconSvgHref} />
+    <link rel="icon" type="image/x-icon" href={faviconIcoHref} />
     <title>{title}</title>
   </head>
   <body>

@@ -1,8 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import TemplateShowcase from "../components/TemplateShowcase";
+import LiveSpeedDashboard from "../components/LiveSpeedDashboard";
 ---
 
-<BaseLayout title="Original Solid + Astro + Kobalte Template">
-  <TemplateShowcase client:only="solid-js" />
+<BaseLayout
+  title="BC Speedometer | Live Player Speed"
+  description="WebSocketでプレイヤー位置情報を受信し、hex/hour, hex/min, hex/secで速度表示するページ"
+>
+  <LiveSpeedDashboard client:only="solid-js" />
 </BaseLayout>
