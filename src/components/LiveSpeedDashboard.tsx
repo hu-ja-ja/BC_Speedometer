@@ -47,6 +47,7 @@ const unitOptions: Array<{ value: SpeedUnit; label: string }> = [
 const EWMA_ALPHA = 0.35;
 const MIN_EFFECTIVE_ELAPSED_SEC = 0.2;
 const STALE_GAP_SEC = 2.5;
+const SPEED_RESET_TIMEOUT_SEC = 3;
 const MAX_REASONABLE_HEX_PER_SEC = 120;
 
 function normalizePlayerIds(raw: string): string[] {
@@ -176,6 +177,7 @@ export default function LiveSpeedDashboard() {
   let closeIntentional = false;
   let speedPopup: Window | null = null;
   let popupClosedCheckTimer: number | undefined;
+  let speedResetCheckTimer: number | undefined;
 
   const orderedStats = createMemo(() =>
     Object.values(statsByPlayer()).sort((a, b) => b.receivedAt - a.receivedAt)
@@ -409,6 +411,26 @@ export default function LiveSpeedDashboard() {
     syncPopupContent();
   });
 
+  speedResetCheckTimer = window.setInterval(() => {
+    const now = Date.now();
+
+    setStatsByPlayer((prev) => {
+      let changed = false;
+      const next: Record<string, PlayerSpeedState> = {};
+
+      for (const [entityId, state] of Object.entries(prev)) {
+        if (state.speedHexPerSec > 0 && (now - state.receivedAt) / 1000 >= SPEED_RESET_TIMEOUT_SEC) {
+          next[entityId] = { ...state, speedHexPerSec: 0 };
+          changed = true;
+        } else {
+          next[entityId] = state;
+        }
+      }
+
+      return changed ? next : prev;
+    });
+  }, 500);
+
   popupClosedCheckTimer = window.setInterval(() => {
     if (speedPopup?.closed) {
       speedPopup = null;
@@ -420,6 +442,9 @@ export default function LiveSpeedDashboard() {
     disconnectFeed(false);
     if (popupClosedCheckTimer) {
       clearInterval(popupClosedCheckTimer);
+    }
+    if (speedResetCheckTimer) {
+      clearInterval(speedResetCheckTimer);
     }
     closeSpeedPopup();
   });
